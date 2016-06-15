@@ -9,6 +9,7 @@ node src/app.js
 ## configuration
 
 generator.js generates data to be inserted into datafy
+
 converter.js converts the generated data to the endpoint format
 
 ```javascript
