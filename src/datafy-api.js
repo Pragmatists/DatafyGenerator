@@ -18,8 +18,7 @@ exports.datasource = {
                 "type" : "text"
             }
         ]
-    },
-    "data"     : [{"entry" : {"name" : "test"}}]
+    }
 };
 
 exports.headers = {
@@ -48,7 +47,7 @@ exports.authenticate = function () {
 };
 
 exports.deleteDS = function () {
-    Log.write('Deleting ' + exports.datasource.template.name + "... ")
+    Log.write('Deleting ' + exports.datasource.template.name + "... ");
     return HTTP.request({
         url     : "https://" + exports.authData.organizationId + ".datafy.pro/api/data-sources/" + exports.datasource.template.name,
         method  : "DELETE",
@@ -74,11 +73,10 @@ exports.deleteDS = function () {
         }).catch(function (err) {
             Log.writeln("ERROR " + err)
         });
-    ;
 };
 
 exports.createDS = function () {
-    Log.write('Creating ' + exports.datasource.template.name + "... ")
+    Log.write('Creating ' + exports.datasource.template.name + "... ");
     return HTTP.request({
         url     : "https://" + exports.authData.organizationId + ".datafy.pro/api/data-stores/",
         method  : "POST",
@@ -107,13 +105,13 @@ exports.createDS = function () {
         });
 };
 
-exports.addData = function () {
-    Log.write('Inserting data... ")
+exports.addData = function (data) {
+    Log.write("Inserting data... ");
     return HTTP.request({
         url     : "https://" + exports.authData.organizationId + ".datafy.pro/api/data-sources/" + exports.datasource.template.name + "/entries",
         method  : "POST",
         headers : exports.headers,
-        body    : [JSON.stringify(exports.datasource.data)]
+        body    : [JSON.stringify(data)]
     })
         .then(function (response) {
             return response.body.read();
@@ -125,15 +123,15 @@ exports.addData = function () {
                 return response.toJSON().data[0];
             }
         })
-        .then(function (data) {
-            if (data && data.statusCode) {
-                Log.writeln("  FAILED: " + data.message);
+        .then(function (response) {
+            if (response && response.statusCode) {
+                Log.writeln("  FAILED: " + response.message);
             } else {
-                Log.writeln("SUCCESS");
+                Log.writeln("SUCCESSFULLY ADDED " + data.length + " RECORDS");
             }
-            return data;
+            return response;
         })
         .catch(function (err) {
             Log.writeln("ERROR " + err)
         });
-}
+};
