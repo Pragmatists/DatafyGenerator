@@ -1,4 +1,3 @@
-var _ = require('lodash-node');
 var HTTP = require("q-io/http");
 var Log = require("./logger.js");
 

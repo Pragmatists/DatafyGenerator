@@ -8,5 +8,9 @@ exports.generate = function () {
 };
 
 function generate() {
-    return [{name : 'a'}, {name : 'b'}];
+    var data = [];
+    for (var i=0; i<1000; i++) {
+        data.push({name : 'a'})
+    }
+    return data;
 }
