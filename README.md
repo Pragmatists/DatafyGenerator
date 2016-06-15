@@ -11,6 +11,7 @@ node src/app.js
 generator.js generates data to be inserted into datafy
 converter.js converts the generated data to the endpoint format
 
+```javascript
 Datafy.authData = {
     "organizationId" : "YOUR_ORG_ID",
     "username"       : "EMAIL@YOUR_ORG.COM",
@@ -29,3 +30,4 @@ Datafy.datasource = {
         ]
     }
 };
+```
