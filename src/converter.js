@@ -1,7 +1,7 @@
 var _ = require('lodash-node');
 var Q = require('q');
 
-exports.convert = function (data) {
+exports.convertData = function (data) {
     return Q.fcall(function () {
         return convert(data);
     });
@@ -10,9 +10,7 @@ exports.convert = function (data) {
 function convert(data) {
     return _(data).map(function (element) {
         return {
-            "entry" : {
-                name : element.name
-            }
+            "entry" : element
         }
     }).flatten().value();
 }

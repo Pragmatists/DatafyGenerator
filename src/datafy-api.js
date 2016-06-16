@@ -1,34 +1,17 @@
 var HTTP = require("q-io/http");
+var _ = require('lodash-node');
 var Log = require("./logger.js");
+var converter = require('./converter.js');
+var generator = require('./generator.js');
 
-exports.authData = {
-    "organizationId" : "pragmatists",
-    "username"       : "datafy@pragmatists.pl",
-    "password"       : "admin!",
-    "rememberMe"     : false
-};
 
-exports.datasource = {
-    "template" : {
-        "name"       : "sampleDS",
-        "properties" : [
-            {
-                "name" : "name",
-                "type" : "text"
-            }
-        ]
-    }
-};
-
-exports.headers = {
-    "Content-Type"    : "application/json",
-    "authToken"       : "",
-    "Organization-Id" : exports.authData.organizationId
-};
-
+exports.authData = {};
+exports.datasource = {};
+var headers = {"Content-Type" : "application/json", "authToken" : ""};
 
 exports.authenticate = function () {
     Log.write('Authenticating... ');
+    headers["Organization-Id"] = exports.authData.organizationId;
     return HTTP.request({
         url     : "https://" + exports.authData.organizationId + ".datafy.pro/api/authentication",
         method  : "POST",
@@ -41,16 +24,17 @@ exports.authenticate = function () {
         .then(JSON.parse)
         .then(function (data) {
             Log.writeln(JSON.stringify(data));
-            exports.headers.authToken = data.authToken;
+            headers.authToken = data.authToken;
+            return data;
         });
 };
 
 exports.deleteDS = function () {
-    Log.write('Deleting ' + exports.datasource.template.name + "... ");
+    Log.write('Deleting ' + exports.datasource.name + "... ");
     return HTTP.request({
-        url     : "https://" + exports.authData.organizationId + ".datafy.pro/api/data-sources/" + exports.datasource.template.name,
+        url     : "https://" + exports.authData.organizationId + ".datafy.pro/api/data-sources/" + exports.datasource.name,
         method  : "DELETE",
-        headers : exports.headers,
+        headers : headers,
         body    : []
     })
         .then(function (response) {
@@ -75,12 +59,12 @@ exports.deleteDS = function () {
 };
 
 exports.createDS = function () {
-    Log.write('Creating ' + exports.datasource.template.name + "... ");
+    Log.write('Creating ' + exports.datasource.name + "... ");
     return HTTP.request({
         url     : "https://" + exports.authData.organizationId + ".datafy.pro/api/data-stores/",
         method  : "POST",
-        headers : exports.headers,
-        body    : [JSON.stringify(exports.datasource.template)]
+        headers : headers,
+        body    : [JSON.stringify(removeOptions(exports.datasource))]
     })
         .then(function (response) {
             return response.body.read();
@@ -95,21 +79,21 @@ exports.createDS = function () {
         .then(function (data) {
             if (data && data.errorCode) {
                 Log.writeln("  FAILED: " + data.message);
+                throw data.message;
             } else {
                 Log.writeln("CREATED");
+                data = {message: "Datasource " + exports.datasource.name + " successfully created."}
             }
-        })
-        .catch(function (err) {
-            Log.writeln("ERROR " + err)
+            return data;
         });
 };
 
-exports.addData = function (data) {
+exports.insertData = function (data) {
     Log.write("Inserting data... ");
     return HTTP.request({
-        url     : "https://" + exports.authData.organizationId + ".datafy.pro/api/data-sources/" + exports.datasource.template.name + "/entries",
+        url     : "https://" + exports.authData.organizationId + ".datafy.pro/api/data-sources/" + exports.datasource.name + "/entries",
         method  : "POST",
-        headers : exports.headers,
+        headers : headers,
         body    : [JSON.stringify(data)]
     })
         .then(function (response) {
@@ -123,14 +107,36 @@ exports.addData = function (data) {
             }
         })
         .then(function (response) {
+            console.log(JSON.stringify(response));
             if (response && response.statusCode) {
                 Log.writeln("  FAILED: " + response.message);
+                throw response.message;
             } else {
                 Log.writeln("SUCCESSFULLY ADDED " + data.length + " RECORDS");
             }
             return response;
-        })
-        .catch(function (err) {
-            Log.writeln("ERROR " + err)
         });
 };
+
+exports.isAuthenticated = function() {
+    return headers.authToken && (headers.authToken.length !== 0);
+};
+
+exports.generateData = function () {
+    return generator.generateData(exports.datasource);
+};
+
+exports.convertData = function (data) {
+    return converter.convertData(data);
+};
+
+function removeOptions(json) {
+    var newjson = JSON.parse(JSON.stringify(json));
+
+    delete newjson['options'];
+    _(newjson.properties).forEach(function (elem) {
+        delete elem['options'];
+    })
+
+    return newjson;
+}
