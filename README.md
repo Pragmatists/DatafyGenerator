@@ -23,13 +23,35 @@ Datafy.authData = {
 
 Datafy.datasource = {
     "template" : {
-        "name"       : "SAMPLE_DATASOURCE",
+        "name"       : "DATASOURCE_NAME",
         "properties" : [
             {
-                "PROPERTY_NAME" : "PROPERTY_VALUE",
-                "type" : "text"
+                "name" : "PROPERTY_VALUE",
+                "type" : "PROPERTY_TYPE",
+                "options" : {
+                    // TEXT  -  default value "Element"
+                    "possibleValues" : [
+                        {"value" : "a", "probability" : 1},
+                        {"value" : "b", "probability" : 2},
+                        {"value" : "c", "probability" : 3}
+                    ]
+                    "random" : "true"
+                    // BOOLEAN, INTEGER, DOUBLE  -  default value  true, 123, 1.23
+                    "possibleValues" : [
+                        {"value" : "true", "probability" : 1},
+                        {"value" : "2", "probability" : 2},
+                        {"value" : "3.3", "probability" : 3}
+                    ]
+                    "random" : { // for BOOLEAN "random" : "true"
+                        "min" : 123,
+                        "max" : 456
+                    }
+                }
             }
-        ]
+        ],
+        "options"   : {
+            "count" : 123 // number of objects to insert to the datasource
+        }
     }
 };
 ```

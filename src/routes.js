@@ -1,7 +1,4 @@
-var converter = require('./converter.js');
-var generator = require('./generator.js');
 var Datafy = require('./datafy-api.js');
-
 
 exports.routes = function (express) {
     var router = express.Router();

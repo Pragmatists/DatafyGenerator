@@ -67,39 +67,24 @@
         <div class="panel-heading">
             <h3 class="panel-title">Datasource information</h3>
         </div>
-            <div class="panel-body">
-                The format is following:<br/>
-            <pre><code>
-{
-    "name" : "DATASOURCE_NAME",
-    "properties" : [
-        {
-            "name" : "PROPERTY_NAME",
-            "type" : "PROPERTY_TYPE",
-            "options" : // options for the generator
-        }
-     ],
-    "options" : { "count" : 1000 }
-}
-            </code></pre>
-
-                <form action="/datafy/datasource" method="post">
-                    <div class="form-group">
-                        <label for="template">Definition:</label>
+        <div class="panel-body">
+            <form action="/datafy/datasource" method="post">
+                <div class="form-group">
+                    <label for="template">Definition:</label>
                     <textarea id="template" name="template" class="form-control" rows="10"><%= !locals.template ? '' : template
                         %></textarea>
-                    </div>
-                    <% if (locals.ds_error) { %>
-                    <div class="alert alert-danger" role="alert">
-                        <span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>
-                        <span class="sr-only">Error:</span>
-                        <%= ds_error %>
-                    </div>
-                    <% } %>
+                </div>
+                <% if (locals.ds_error) { %>
+                <div class="alert alert-danger" role="alert">
+                    <span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>
+                    <span class="sr-only">Error:</span>
+                    <%= ds_error %>
+                </div>
+                <% } %>
 
-                    <button type="submit" class="btn btn-default">Generate data</button>
-                </form>
-            </div>
+                <button type="submit" class="btn btn-default">Generate data</button>
+            </form>
+        </div>
     </div>
 
     <% if (locals.ds_msg) { %>
@@ -110,6 +95,71 @@
     </div>
     <% } %>
 
+
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            <a data-toggle="collapse" data-target="#collapse-ds" href="#collapse-ds">
+                <span class="glyphicon glyphicon-collapse-down" aria-hidden="true"></span>
+            </a> <h3 class="panel-title">Datasource and data generation format</h3>
+        </div>
+        <div id="collapse-ds" class="panel-collapse collapse">
+            <div class="panel-body">
+                <code>
+                <pre>
+{
+    "name"       : "sampleDS",
+    "properties" : [
+        {
+            "name" : "name",
+            "type" : "text",
+            "options" : {
+                "possibleValues" : [
+                    {"value" : "a", "probability" : 1},
+                    {"value" : "b", "probability" : 2},
+                    {"value" : "c", "probability" : 3}
+                ]
+            }
+        },
+        {
+            "name" : "random_name",
+            "type" : "text",
+            "options" : {
+                "random" : true
+            }
+        },
+        {
+            "name" : "number",
+            "type" : "integer",
+            "options" : {
+                "possibleValues" : [
+                    {"value" : 8, "probability" : 1},
+                    {"value" : 9, "probability" : 2},
+                    {"value" : 10, "probability" : 3},
+                    {"value" : 11, "probability" : 2},
+                    {"value" : 12, "probability" : 1}
+                ]
+            }
+        },
+        {
+            "name" : "random_number",
+            "type" : "integer",
+            "options" : {
+                "random" : {
+                    "max" : 20,
+                    "min" : 8
+                }
+            }
+        }
+    ],
+    "options" : {
+        "count": 1000
+    }
+}
+                </pre>
+                </code>
+            </div>
+        </div>
+    </div>
     <% } %>
 </div>
 </body>
