@@ -1,90 +1,47 @@
-var _ = require('lodash-node');
-var Q = require('q');
+var _ = require('lodash');
 
-exports.generateData = function (datasource) {
-    return Q.fcall(function () {
-        return generate(datasource);
+exports.generateData = (datasource) => {
+    return new Promise(function (resolve) {
+        var res = generate(datasource);
+        resolve(res)
     });
 };
+
+function chooseOneOf(value) {
+    var proportionalSet = [];
+    _(value).forEach(function (elem) {
+        for (var i = 0; i < elem._probability; i++) {
+            proportionalSet.push(elem);
+        }
+    });
+    return proportionalSet[Math.floor(Math.random() * proportionalSet.length)];
+}
+function generateDataPoint(dataDefinition, point) {
+    for (var key in dataDefinition) {
+        var value = dataDefinition[key];
+
+        if (value === "_random_integer") {
+            point[key] = dataDefinition._min + Math.floor(Math.random() * (dataDefinition._max + 1 - dataDefinition._min));
+        } else if (_.isArray(value)) {
+            generateDataPoint(chooseOneOf(value), point);
+        } else if (_.isString(value) || _.isInteger(value) || _.isNumber(value) || _.isDate(value) || _.isBoolean(value)) {
+            if (!key.startsWith("_")) {
+                point[key] = value;
+            }
+        } else {
+            generateDataPoint(value, point);
+        }
+    }
+}
 
 function generate(datasource) {
     var data = [];
 
-    for (var i=0; i<datasource.options.count; i++) {
-        var pair = [];
-        _(datasource.properties).forEach(function (property) {
-            pair.push([property.name, generateValueForType(property.type, property.options)]);
-        });
-        var obj = {};
-        _(pair).forEach(function (elem) {
-            obj[elem[0]] = elem[1];
-        });
-        data.push(obj);
+    for (var i = 0; i < datasource.options.count; i++) {
+        var point = {};
+        generateDataPoint(datasource.properties, point);
+        data.push(point);
     }
 
     return data;
-}
-
-function generateValueForType(type, options) {
-    if(type === "text") {
-        if (options.possibleValues) {
-            var proportionalSet = [];
-            _(options.possibleValues).forEach(function (elem) {
-                for(var i=0; i<elem.probability; i++) {
-                    proportionalSet.push(elem.value);
-                }
-            });
-            return proportionalSet[Math.floor(Math.random() * proportionalSet.length)]
-        } else if (options.random) {
-            return "Element " + Math.round(Math.random() * 10000);
-        } else {
-            return "Element";
-        }
-    } else
-    if(type === "integer") {
-        if (options.possibleValues) {
-            var proportionalSet = [];
-            _(options.possibleValues).forEach(function (elem) {
-                for(var i=0; i<elem.probability; i++) {
-                    proportionalSet.push(elem.value);
-                }
-            });
-            return proportionalSet[Math.floor(Math.random() * proportionalSet.length)]
-        } else if (options.random) {
-            return options.random.min + Math.floor(Math.random() * (options.random.max + 1 - options.random.min));
-        } else {
-            return "123";
-        }
-    }
-    else
-    if(type === "boolean") {
-        if (options.possibleValues) {
-            var proportionalSet = [];
-            _(options.possibleValues).forEach(function (elem) {
-                for(var i=0; i<elem.probability; i++) {
-                    proportionalSet.push(elem.value);
-                }
-            });
-            return proportionalSet[Math.floor(Math.random() * proportionalSet.length)]
-        } else if (options.random) {
-            return Math.random() > 0.5 ? true : false;
-        } else {
-            return "true";
-        }
-    } else
-    if(type === "double") {
-        if (options.possibleValues) {
-            var proportionalSet = [];
-            _(options.possibleValues).forEach(function (elem) {
-                for(var i=0; i<elem.probability; i++) {
-                    proportionalSet.push(elem.value);
-                }
-            });
-            return proportionalSet[Math.floor(Math.random() * proportionalSet.length)]
-        } else if (options.random) {
-            return options.random.min + (Math.random() * (options.random.max + 1 - options.random.min));
-        } else {
-            return "1.23";
-        }
-    }
 }

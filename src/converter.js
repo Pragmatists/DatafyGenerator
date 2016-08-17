@@ -1,9 +1,8 @@
-var _ = require('lodash-node');
-var Q = require('q');
+var _ = require('lodash');
 
 exports.convertData = function (data) {
-    return Q.fcall(function () {
-        return convert(data);
+    return new Promise(function (resolve) {
+        resolve(convert(data));
     });
 };
 

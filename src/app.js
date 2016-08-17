@@ -1,4 +1,4 @@
-var _ = require('lodash-node');
+var _ = require('lodash');
 var express = require('express');
 var app = express();
 var http = require('http');

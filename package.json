@@ -1,16 +1,15 @@
 {
+  "engines": {
+    "node": "6.3.0"
+  },
   "dependencies": {
     "body-parser": "*",
     "compression": "*",
     "ejs": "*",
     "express": "*",
-    "express-session": "^1.10.3",
-    "lodash-node": "^2.4.1",
-    "q": "^1.0.1",
-    "q-io": "^1.13.2"
-  },
-  "devDependencies": {
-    "node-uuid": "^1.4.1",
-    "nodeunit": "^0.9.0"
+    "express-session": "*",
+    "lodash": "*",
+    "request" : "*",
+    "request-promise" : "*"
   }
 }
