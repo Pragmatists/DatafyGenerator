@@ -1,15 +1,13 @@
 var _ = require('lodash');
 
-exports.convertData = function (data) {
-    return new Promise(function (resolve) {
-        resolve(convert(data));
-    });
+exports.convertData = (data) => {
+    return new Promise((resolve) =>
+            resolve(convert(data))
+    );
 };
 
 function convert(data) {
-    return _(data).map(function (element) {
-        return {
-            "entry" : element
-        }
+    return _(data).map(element => {
+        return {"entry" : element}
     }).flatten().value();
 }

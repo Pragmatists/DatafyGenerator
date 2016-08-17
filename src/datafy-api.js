@@ -19,14 +19,14 @@ exports.authenticate = () => {
         body    : exports.authData,
         json    : true
     })
-        .then(function (data) {
+        .then(data => {
             Log.writeln(JSON.stringify(data));
             headers.authToken = data.authToken;
             return data;
         });
 };
 
-exports.deleteDS = function () {
+exports.deleteDS = () => {
     Log.write('Deleting ' + exports.datasource.structure.name + "... ");
     return HTTP({
         url     : "https://" + exports.authData.organizationId + ".datafy.pro/api/data-sources/" + exports.datasource.structure.name,
@@ -35,18 +35,18 @@ exports.deleteDS = function () {
         body    : {},
         json    : true
     })
-        .then(function (data) {
+        .then(data => {
             if (data && data.errorCode) {
                 Log.writeln("  NOTHING TO DELETE: " + data.message);
             } else {
                 Log.writeln("DELETED");
             }
-        }).catch(function (err) {
+        }).catch(err => {
             Log.writeln("ERROR " + err)
         });
 };
 
-exports.createDS = function () {
+exports.createDS = () => {
     Log.write('Creating ' + exports.datasource.structure.name + "... ");
     return HTTP({
         url     : "https://" + exports.authData.organizationId + ".datafy.pro/api/data-stores/",
@@ -55,7 +55,7 @@ exports.createDS = function () {
         body    : exports.datasource.structure,
         json    : true
     })
-        .then(function (data) {
+        .then(data => {
             if (data && data.errorCode) {
                 Log.writeln("  FAILED: " + data.message);
                 throw data.message;
@@ -67,7 +67,7 @@ exports.createDS = function () {
         });
 };
 
-exports.insertData = function (data) {
+exports.insertData = (data) => {
     Log.write("Inserting data... ");
     return HTTP({
         url     : "https://" + exports.authData.organizationId + ".datafy.pro/api/data-sources/" + exports.datasource.structure.name + "/entries",
@@ -76,7 +76,7 @@ exports.insertData = function (data) {
         body    : data,
         json    : true
     })
-        .then(function (response) {
+        .then(response => {
             if (response && response.statusCode) {
                 Log.writeln("  FAILED: " + response.message);
                 throw response.message;
@@ -87,16 +87,15 @@ exports.insertData = function (data) {
         });
 };
 
-exports.isAuthenticated = () =>
-    headers.authToken && (headers.authToken.length !== 0);
+exports.isAuthenticated = () => headers.authToken && (headers.authToken.length !== 0);
 
 
 exports.generateData = () => {
     Log.writeln("Generating data... ");
     return generator.generateData(exports.datasource);
-}
+};
 
 exports.convertData = (data) => {
     Log.writeln("Converting data... ");
     return converter.convertData(data);
-}
+};

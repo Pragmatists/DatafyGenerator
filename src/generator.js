@@ -1,7 +1,7 @@
 var _ = require('lodash');
 
 exports.generateData = (datasource) => {
-    return new Promise(function (resolve) {
+    return new Promise(resolve => {
         var res = generate(datasource);
         resolve(res)
     });
@@ -9,7 +9,7 @@ exports.generateData = (datasource) => {
 
 function chooseOneOf(value) {
     var proportionalSet = [];
-    _(value).forEach(function (elem) {
+    _(value).forEach(elem => {
         for (var i = 0; i < elem._probability; i++) {
             proportionalSet.push(elem);
         }
@@ -17,9 +17,7 @@ function chooseOneOf(value) {
     return proportionalSet[Math.floor(Math.random() * proportionalSet.length)];
 }
 function generateDataPoint(dataDefinition, point) {
-    for (var key in dataDefinition) {
-        var value = dataDefinition[key];
-
+    _(dataDefinition).forEach((value, key) => {
         if (value === "_random_integer") {
             point[key] = dataDefinition._min + Math.floor(Math.random() * (dataDefinition._max + 1 - dataDefinition._min));
         } else if (_.isArray(value)) {
@@ -31,7 +29,7 @@ function generateDataPoint(dataDefinition, point) {
         } else {
             generateDataPoint(value, point);
         }
-    }
+    });
 }
 
 function generate(datasource) {

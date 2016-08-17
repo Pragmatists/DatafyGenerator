@@ -182,4 +182,4 @@ Datafy.authenticate()
     .then(Datafy.createDS)
     .then(Datafy.generateData)
     .then(Datafy.convertData)
-    .then(Datafy.insertData)
+    .then(Datafy.insertData);
