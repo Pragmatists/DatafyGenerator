@@ -20,6 +20,8 @@ function generateDataPoint(dataDefinition, point) {
     _(dataDefinition).forEach((value, key) => {
         if (value === "_random_integer") {
             point[key] = dataDefinition._min + Math.floor(Math.random() * (dataDefinition._max + 1 - dataDefinition._min));
+        } else if (value === "_random_date") {
+            point[key] = new Date(dataDefinition._min + Math.floor(Math.random() * (dataDefinition._max - dataDefinition._min)));
         } else if (_.isArray(value)) {
             generateDataPoint(chooseOneOf(value), point);
         } else if (_.isString(value) || _.isInteger(value) || _.isNumber(value) || _.isDate(value) || _.isBoolean(value)) {
