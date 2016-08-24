@@ -40,12 +40,12 @@ exports.routes = function (express) {
         var chain;
         if (req.body.delete) {
             chain = Datafy.deleteDS()
-                .then(Datafy.createDS);
+                .then(Datafy.createDS)
+                .then(Datafy.generateData);
         } else {
-            chain = Datafy.createDS();
+            chain = Datafy.generateData();
         }
         chain
-            .then(Datafy.generateData)
             .then(Datafy.convertData)
             .then(Datafy.insertData)
             .then(function (data) {
