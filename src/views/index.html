@@ -70,8 +70,10 @@
         <div class="panel-body">
             <form action="/datafy/datasource" method="post">
                 <div class="form-group">
-                    <label for="delete">Delete current data?</label>
-                    <input type="checkbox" id="delete" name="delete" class="form-control" value="true" checked/>
+                    <label for="delete" class="checkbox-inline">
+                        <input type="checkbox" id="delete" name="delete" class="form-control" value="true" checked>Delete current
+                        data?</input>
+                    </label>
                 </div>
                 <div class="form-group">
                     <label for="template">Definition:</label>
@@ -104,7 +106,9 @@
         <div class="panel-heading">
             <a data-toggle="collapse" data-target="#collapse-ds" href="#collapse-ds">
                 <span class="glyphicon glyphicon-collapse-down" aria-hidden="true"></span>
-            </a> <h3 class="panel-title">Datasource and data generation format</h3>
+            </a>
+
+            <h3 class="panel-title">Datasource and data generation format</h3>
         </div>
         <div id="collapse-ds" class="panel-collapse collapse">
             <div class="panel-body">
