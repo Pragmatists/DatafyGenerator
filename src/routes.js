@@ -37,16 +37,30 @@ exports.routes = function (express) {
         Datafy.authData = req.session.authData;
         Datafy.datasource = JSON.parse(req.session.template);
 
-        Datafy.deleteDS()
-            .then(Datafy.createDS)
+        var chain;
+        if (req.body.delete) {
+            chain = Datafy.deleteDS()
+                .then(Datafy.createDS);
+        } else {
+            chain = Datafy.createDS();
+        }
+        chain
             .then(Datafy.generateData)
             .then(Datafy.convertData)
             .then(Datafy.insertData)
             .then(function (data) {
-                res.render("index.html", {authData : req.session.authData, template : req.session.template, ds_msg : "Data successfully inserted."});
+                res.render("index.html", {
+                    authData : req.session.authData,
+                    template : req.session.template,
+                    ds_msg   : "Data successfully inserted."
+                });
             })
             .catch(function (data) {
-                res.render("index.html", {authData : req.session.authData, template : req.session.template, ds_error : ("Could not insert data: " + data)});
+                res.render("index.html", {
+                    authData : req.session.authData,
+                    template : req.session.template,
+                    ds_error : ("Could not insert data: " + data)
+                });
             })
             .done();
     });

@@ -172,6 +172,7 @@ Datafy.datasource = {
     "structure"  : {
         "name"       : "sampleDS",
         "properties" : [
+            {"name" : "Rachunek", "type" : "integer"},
             {"name" : "Produkt", "type" : "text"},
             {"name" : "Cena", "type" : "integer"},
             {"name" : "Liczba", "type" : "integer"},
@@ -214,11 +215,16 @@ Datafy.datasource = {
         "Data" : {
             "Data" : "_random_date",
             "_min"    : 1000 * (8*3600),
-            "_max"    : 1000 * (9*3600)
+            "_max"    : 1000 * (9*3600),
+            "Rachunek" : {
+                "Rachunek" : "_random_integer",
+                "_min" : 0,
+                "_max" : 500
+            }
         }
     },
     "options"    : {
-        "count" : 10000
+        "count" : 1000
     }
 };
 
