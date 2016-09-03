@@ -27,8 +27,7 @@ exports.routes = function (express) {
                     obj.auth_error = "Could not authenticate: " + data.message;
                 }
                 res.render("index.html", obj);
-            })
-            .done();
+            });
     });
 
     router.post('/datasource', function (req, res) {
@@ -61,8 +60,7 @@ exports.routes = function (express) {
                     template : req.session.template,
                     ds_error : ("Could not insert data: " + data)
                 });
-            })
-            .done();
+            });
     });
 
     return router;
