@@ -22,10 +22,14 @@ exports.routes = function (express) {
 
         Datafy.authData = authData;
         Datafy.authenticate()
-            .then(function (data) {
+            .then((data) => {
                 if (!Datafy.isAuthenticated()) {
                     obj.auth_error = "Could not authenticate: " + data.message;
                 }
+                res.render("index.html", obj);
+            })
+            .catch((err) => {
+                obj.auth_error = "Could not authenticate: " + data.message + "; " + err;
                 res.render("index.html", obj);
             });
     });
