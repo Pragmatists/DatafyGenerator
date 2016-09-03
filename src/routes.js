@@ -29,7 +29,7 @@ exports.routes = function (express) {
                 res.render("index.html", obj);
             })
             .catch((err) => {
-                obj.auth_error = "Could not authenticate: " + data.message + "; " + err;
+                obj.auth_error = "Could not authenticate: " + err;
                 res.render("index.html", obj);
             });
     });
